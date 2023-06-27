@@ -50,7 +50,6 @@ function editOptions_(inputOptions) {
     const fileList = [];
     const fileIdArray = Array.isArray(fileIdList) ? fileIdList : [fileIdList];
     fileIdArray.forEach(([fileId, mimeType]) => {
-      // Send an email with a file from Google Drive attached as a PDF.
       const res = driveCommon.getFileById(fileId);
       if (!utilsLibrary.isObject(res)) {
         console.log(`${res}|fileId:${fileId}`);

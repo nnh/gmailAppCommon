@@ -1,6 +1,21 @@
 /**
- * Executes the test cases for email with different combinations of title, body, and email address.
+ * Executes multiple email tests.
  * @returns {void}
+ */
+function executeEmailTests() {
+  if (!executeTitleBodyEmailTests()) {
+    return;
+  }
+  if (!executeNoReplyAndNameTests()) {
+    return;
+  }
+  if (!executeSendEmailWithAttachmentsTest()) {
+    return;
+  }
+}
+/**
+ * Executes tests for email with title and body.
+ * @returns {boolean} Returns true if all the tests pass, false otherwise.
  */
 function executeTitleBodyEmailTests() {
   const [mailAddress, title, body] = new EmailContent().getEmailContent();
@@ -23,34 +38,44 @@ function executeTitleBodyEmailTests() {
   if (titleBodyMailResNg.includes(true)) {
     console.log('Test NG: exceptional case - Title, Body, or Email Address');
     console.log(titleBodyMailResNg);
-    return;
+    return false;
   }
 
   try {
     sendEmailWithOptions_(mailAddress, title, body);
   } catch (error) {
     console.log('Test NG: normal case - Title, Body, Email Address');
-    return;
+    return false;
   }
 
   console.log('Test Passed: Title, Body, Email Address');
+  return true;
 }
-
+/**
+ * Represents email content.
+ */
 class EmailContent {
+  /**
+   * Creates an instance of EmailContent.
+   */
   constructor() {
     this.mailAddress = Session.getActiveUser().getEmail();
     this.defaultTitle = 'titleTest';
     this.defaultBody = 'bodyTest';
   }
-
+  /**
+   * Retrieves the email content.
+   * @param {string} [title=defaultTitle] - The email title.
+   * @param {string} [body=defaultBody] - The email body.
+   * @returns {Array<string>} An array containing the email address, title, and body.
+   */
   getEmailContent(title = this.defaultTitle, body = this.defaultBody) {
     return [this.mailAddress, title, body];
   }
 }
-
 /**
- * Executes the test cases for noReply and name options.
- * @returns {void}
+ * Executes tests for email without reply and name.
+ * @returns {boolean} Returns true if all the tests pass, false otherwise.
  */
 function executeNoReplyAndNameTests() {
   const targetParameters = [
@@ -80,6 +105,7 @@ function executeNoReplyAndNameTests() {
 
   if (results.every(x => x === true)) {
     console.log('Test Passed: noReply, name.');
+    return true;
   }
 }
 
@@ -99,7 +125,10 @@ function setNoReplyAndName_(noReply, name, options = new Map()) {
   }
   return options;
 }
-
+/**
+ * Executes the test cases for sending email with attachments.
+ * @returns {boolean} Returns true if all the tests pass, false otherwise.
+ */
 function executeSendEmailWithAttachmentsTest() {
   const pdf = [
     PropertiesService.getScriptProperties().getProperty('testPdfId'),
@@ -118,7 +147,7 @@ function executeSendEmailWithAttachmentsTest() {
   if (resNg.some(x => x !== true)) {
     console.log('Test NG: exceptional case, attachments');
     console.log(resNg);
-    return;
+    return false;
   }
   const testArrayOk = [[pdf], [pdf, jpeg]];
   const resOk = testArrayOk.map(attachments => {
@@ -129,8 +158,15 @@ function executeSendEmailWithAttachmentsTest() {
   });
   if (resOk.every(x => x === true)) {
     console.log('Test Passed: attachments.');
+    return true;
   }
 }
+/**
+ * Executes a test case for sending email with attachments.
+ * @param {Array<string|MimeType>} contents - An array containing the email address, title, and body.
+ * @param {Map<string, Array<Array<string|MimeType>>>} options - The options for email attachments.
+ * @returns {boolean|Error} Returns true if the test passes, or an error object if the test fails.
+ */
 function execTestSendEmailWithAttachments_(contents, options) {
   try {
     sendEmailWithOptions_(...contents, options);
@@ -164,7 +200,7 @@ function executeSendEmailWithAttachmentsTest() {
   if (resNg.some(x => x !== true)) {
     console.log('Test NG: exceptional case - attachments');
     console.log(resNg);
-    return;
+    return false;
   }
 
   const testArrayOk = [[pdf], [pdf, jpeg]];
@@ -177,6 +213,7 @@ function executeSendEmailWithAttachmentsTest() {
 
   if (resOk.every(x => x === true)) {
     console.log('Test Passed: attachments.');
+    return true;
   }
 }
 
