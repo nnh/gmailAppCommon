@@ -9,7 +9,7 @@ https://github.com/nnh/driveCommon
 nnh/utilsLibrary  
 https://github.com/nnh/utilsLibrary
 ### スクリプトプロパティ
-- testJpegId
+- testJpegId  
 テスト用のJPEGファイルのIDを設定してください。  
-- testPdfId
+- testPdfId  
 テスト用のPDFファイルのIDを設定してください。  
